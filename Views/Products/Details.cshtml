@@ -1,0 +1,57 @@
+﻿@model WebShopping.Models.Product
+
+@{
+    ViewBag.Title = "Details";
+}
+
+
+<div>
+    <div class="row">
+        <aside class="col-sm-5">
+            <article class="gallery-wrap">
+                <img src="@Html.DisplayFor(model => model.ImageUrl)" width="450">
+            </article>
+        </aside>
+        <aside class="col-sm-7">
+            <article class="card-body p-5">
+                <h3 class="title mb-3">@Html.DisplayFor(model => model.Title)</h3>
+
+                <p class="price-detail-wrap">
+                    <span class="price h3 text-warning">
+                        <span class="currency">US $</span><span class="num">@Html.DisplayFor(model => model.Price)</span>
+                    </span>
+                </p>
+                <dl class="item-property">
+                    <dt>Category</dt>
+                    <dd>@Html.DisplayFor(model => model.Category.Title)</dd>
+                </dl>
+                <dl class="param param-feature">
+                    <dt>Short Description</dt>
+                    <dd>
+                        <p>
+                            @Html.DisplayFor(model => model.ShortDescription)
+                        </p>
+                    </dd>
+                </dl>
+                <dl class="item-property">
+                    <dt>Long Description</dt>
+                    <dd>
+                        <p>
+                            @Html.DisplayFor(model => model.LongDescription)
+                        </p>
+                    </dd>
+                </dl>
+               
+                <hr>
+                @using (Html.BeginForm("Create", "Carts"))
+                {
+                    @Html.AntiForgeryToken()
+                    @Html.Hidden("ProductId", Model.Id);
+                    @Html.Hidden("Quantity", 1);
+                    <button type="submit" class="btn btn-lg btn-primary text-uppercase">Add to Cart</button>
+                }
+                
+            </article>
+        </aside>
+    </div>
+</div>

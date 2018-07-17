@@ -1,0 +1,86 @@
+﻿@model IEnumerable<WebShopping.Models.Product>
+
+@{
+    ViewBag.Title = "Index";
+}
+
+<h2>Index</h2>
+
+<p>
+    @Html.ActionLink("Create New", "Create")
+</p>
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-2">
+            @using (Html.BeginForm("Index", "Products", FormMethod.Get))
+            {
+                <div class="form-group">
+                    <label for="categories">Categories</label>
+                    <div class="list-group">
+                        <div class="sr-only" id="CurrentCategory">@ViewBag.CategoryString</div>
+                        @Html.DropDownList("Category", null, htmlAttributes: new { @class = "form-control", onchange = "this.form.submit();" })
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+
+</div>
+
+<div class="table-responsive">
+    <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+        <thead>
+            <tr>
+                <th width="5%">
+                    Image
+                </th>
+                <th>
+                    Title
+                </th>
+                <th>
+                    Category
+                </th>
+                <th>
+                    Price
+                </th>
+                <th>
+                    Short Description
+                </th>
+                <th>
+                    Long Description
+                </th>
+                <th style="width:17%"></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>
+                        <img src="@Html.DisplayFor(modelItem => item.ImageUrl)" class="img-thumbnail" />
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Title)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Category.Title)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Price)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.ShortDescription)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.LongDescription)
+                    </td>
+                    <td>
+                        @Html.ActionLink("Edit", "Edit", new { id = item.Id }) |
+                        @Html.ActionLink("Details", "Details", new { id = item.Id }) |
+                        @Html.ActionLink("Delete", "Delete", new { id = item.Id })
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

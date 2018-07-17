@@ -1,0 +1,87 @@
+﻿@model X.PagedList.IPagedList<WebShopping.Models.Product>
+@using X.PagedList.Mvc;
+@using X.PagedList;
+@using X.PagedList.Mvc.Bootstrap4;
+
+@{
+    ViewBag.Title = "Home Page";
+}
+
+<div class="row">
+    <div class="col-lg-3">
+        @using (Html.BeginForm("Index", "Home", FormMethod.Get))
+        {
+            <div class="form-group">
+                <label for="search" class="sr-only">Search</label>
+                <div class="input-group">
+                    @Html.TextBox("SearchString", null, htmlAttributes: new { @class = "form-control", placeholder="Looking for ... "})
+                    <div class="input-group-append">
+                        <button type="submit" class="input-group-append btn btn-primary"><i class="fas fa-search"></i></button>
+                    </div>
+                </div>
+            </div>
+            <hr class="my-4" />
+            <h4>Category</h4>
+            <div class="form-group">
+                <label for="categories" class="sr-only">Category</label>
+                <div class="list-group">
+                    <div class="sr-only" id="CurrentCategory">@ViewBag.CategoryString</div>
+                    @Html.DropDownList("Category", null, htmlAttributes: new { @class = "form-control", onchange = "this.form.submit();" })
+                </div>
+            </div>
+
+            <h4>Sort By</h4>
+            <div class="form-group">
+                <div class="list-group">
+                    @Html.DropDownList("SortBy", null, htmlAttributes: new { @class = "form-control", onchange = "this.form.submit();" })
+                </div>
+            </div>
+        }
+    </div>
+    <!-- /.col-lg-3 -->
+
+    <div class="col-lg-9">
+        @if (Model.Count() == 0)
+        {
+            <div class="alert alert-info text-center" role="alert">
+                There is no item to display
+            </div>
+        }
+        else
+        {
+
+            <div class="row">
+                @foreach (var item in Model)
+                {
+                    <div class="col-lg-4 col-md-4 mb-4">
+                        <div class="card h-100">
+                            <a href="/Products/Details/@item.Id"><img class="card-img-top card-overview" src="@Html.DisplayFor(modelItem => item.ImageUrl)"></a>
+                            <hr style="margin: 0;" />
+                            <div class="card-body">
+                                <h5 class="card-title">
+                                    @Html.ActionLink(item.Title, "Details", "Products", new { id = item.Id }, null)
+                                </h5>
+                                <span class="badge badge-warning mb-2">@Html.DisplayFor(modelItem => item.Category.Title)</span><br />
+                                <h5>$@Html.DisplayFor(modelItem => item.Price)</h5>
+                            </div>
+                            <div class="card-footer">
+                                @using (Html.BeginForm("Create", "Carts"))
+                                {
+                                    @Html.AntiForgeryToken()
+                                    @Html.Hidden("ProductId", item.Id);
+                                    @Html.Hidden("Quantity", 1);
+                                    <button type="submit" class="btn btn-primary">Add to Cart</button>
+                                }
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+            <div class="pagination-center">
+                @Html.PagedListPager((IPagedList)Model, page => Url.Action("Index", new { page, SearchString = ViewBag.SearchString, Category = ViewBag.CategoryString, SortBy = ViewBag.SortByString }), Bootstrap4PagedListRenderOptions.ClassicPlusFirstAndLast)
+            </div>
+        }
+    </div>
+    <!-- /.col-lg-9 -->
+</div>
+<!-- /.row -->
