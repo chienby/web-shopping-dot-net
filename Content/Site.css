@@ -1,0 +1,20 @@
+.gallery-wrap {
+    margin-top: 1rem !important
+}
+.card-overview {
+    height: 252px;
+    width: 252px;
+}
+.pagination-right .pagination {
+    justify-content: flex-end
+}
+
+.pagination-center .pagination {
+    justify-content:center;
+}
+.to-inline {
+    display: inline;
+}
+.fontsize-normal {
+    font-size: 100%;
+}

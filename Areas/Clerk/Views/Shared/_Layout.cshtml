@@ -1,0 +1,87 @@
+﻿@{
+    ViewBag.Name = "Web Shopping";
+    string controllerName = ViewContext.RouteData.Values["controller"].ToString();
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>@ViewBag.Title | @ViewBag.Name</title>
+    @Styles.Render("~/Content/Clerk/css")
+</head>
+<body class="fixed-nav sticky-footer bg-dark" id="page-top">
+    <!-- Navigation-->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top" id="mainNav">
+        <a class="navbar-brand" href="/Clerk">Clerk</a>
+        <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarResponsive">
+            <ul class="navbar-nav navbar-sidenav">
+                <li class="nav-item" data-toggle="tooltip" data-placement="right" title="Categories">
+                    <a class="nav-link" href="/Clerk/Categories">
+                        <i class="fa fa-fw fa-tags"></i>
+                        <span class="nav-link-text">Categories</span>
+                    </a>
+                </li>
+                <li class="nav-item" data-toggle="tooltip" data-placement="right" title="Products">
+                    <a class="nav-link" href="/Clerk/Products">
+                        <i class="fa fa-fw fa-list"></i>
+                        <span class="nav-link-text">Products</span>
+                    </a>
+                </li>
+                <li class="nav-item" data-toggle="tooltip" data-placement="right" title="Products">
+                    <a class="nav-link" href="/">
+                        <i class="fa fa-fw fa-backward"></i>
+                        <span class="nav-link-text">Back to Home</span>
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </nav>
+    <div class="content-wrapper">
+        <div class="container-fluid">
+            <!-- Breadcrumbs-->
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item">
+                    <a href="/Clerk">Clerk</a>
+                </li>
+
+                <li class="breadcrumb-item">@controllerName</li>
+            </ol>
+            <div class="card mb-3">
+                <div class="card-header">
+                    @switch (controllerName)
+                    {
+                        case "Categories":
+                            <i class="fa fa-tags"></i> <span>Categories</span>
+                            break;
+                        case "Products":
+                            <i class="fa fa-list"></i> <span>Products</span>
+                            break;
+                        default:
+                            break;
+                    }
+                </div>
+                <div class="card-body">
+                    @RenderBody()
+                </div>
+            </div>
+        </div>
+        <!-- /.container-fluid-->
+        <!-- /.content-wrapper-->
+        <footer class="sticky-footer">
+            <div class="container">
+                <div class="text-center">
+                    <small>&copy; @DateTime.Now.Year - @ViewBag.name</small>
+                </div>
+            </div>
+        </footer>
+        @Scripts.Render("~/Content/Clerk/js")
+        @RenderSection("scripts", required: false)
+    </div>
+</body>
+</html>

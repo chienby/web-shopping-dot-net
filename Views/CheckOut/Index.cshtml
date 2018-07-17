@@ -1,0 +1,136 @@
+﻿@model WebShopping.Models.CheckOutViewModels
+@using X.PagedList.Mvc;
+@using X.PagedList;
+@using X.PagedList.Mvc.Bootstrap4;
+@using Microsoft.AspNet.Identity
+
+@{
+    decimal subTotal;
+    ViewBag.Title = "Index";
+}
+
+<div class="row mt-5">
+    <div class="col-md-4 order-md-2 mb-4">
+        <h4 class="d-flex justify-content-between align-items-center mb-3">
+            <span class="text-muted">Summary</span>
+            <span class="badge badge-secondary badge-pill">@ViewBag.Count</span>
+        </h4>
+        
+        <ul class="list-group mb-3">
+            <li class="list-group-item d-flex justify-content-between">
+                <span>Total (USD)</span>
+                <strong>$@ViewBag.Total</strong>
+            </li>
+
+            @foreach (var item in Model.Cart)
+            {
+                subTotal = item.Product.Price * item.Quantity;
+                <li class="list-group-item d-flex justify-content-between lh-condensed">
+                    <div>
+                        <h6 class="my-0">@Html.DisplayFor(modelItem => item.Product.Title)</h6>
+                    </div>
+                    <span class="text-muted">$@subTotal</span>
+                </li>
+            }
+        </ul>
+        <div class="base-pagination">
+            @Html.PagedListPager((IPagedList)Model.Cart, page => Url.Action("Index", new { page }), Bootstrap4PagedListRenderOptions.Classic)
+        </div>
+    </div>
+    <div class="col-md-8 order-md-1">
+        <h4 class="mb-3">Shipping address</h4>
+        @using (Html.BeginForm("Create", "CheckOut", FormMethod.Post, new { @class = "needs-validation validation-payment", novalidate = "" } ))
+        {
+            @Html.AntiForgeryToken()
+            <div class="row">
+                <div class="col-md-6 mb-3">
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.ShippingAddress.FirstName, "First Name")
+                        @Html.EditorFor(model => model.ShippingAddress.FirstName, new { htmlAttributes = new { @class = "form-control", placeholder = "James" } })
+                        @Html.ValidationMessageFor(model => model.ShippingAddress.FirstName, "", new { @class = "text-danger" })
+                    </div>
+                    
+                </div>
+                <div class="col-md-6 mb-3">
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.ShippingAddress.LastName, "Last Name")
+                        @Html.EditorFor(model => model.ShippingAddress.LastName, new { htmlAttributes = new { @class = "form-control", placeholder = "Martinez" } })
+                        @Html.ValidationMessageFor(model => model.ShippingAddress.LastName, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+            </div>
+
+            <div class="mb-3">
+                <div class="form-group">
+                    @Html.LabelFor(model => model.ShippingAddress.Email, "Email")
+                    @Html.EditorFor(model => model.ShippingAddress.Email, new { htmlAttributes = new { @class = "form-control", placeholder = "you@example.com" } })
+                    @Html.ValidationMessageFor(model => model.ShippingAddress.Email, "", new { @class = "text-danger" })
+                </div>
+            </div>
+            <div class="mb-3">
+                <div class="form-group">
+                    @Html.LabelFor(model => model.ShippingAddress.PhoneNumber, "Phone Number")
+                    @Html.EditorFor(model => model.ShippingAddress.PhoneNumber, new { htmlAttributes = new { @class = "form-control", placeholder = "0123456789" } })
+                    @Html.ValidationMessageFor(model => model.ShippingAddress.PhoneNumber, "", new { @class = "text-danger" })
+                </div>
+            </div>
+            <div class="mb-3">
+                <div class="form-group">
+                    @Html.LabelFor(model => model.ShippingAddress.Address, "Address")
+                    @Html.EditorFor(model => model.ShippingAddress.Address, new { htmlAttributes = new { @class = "form-control", placeholder = "1234 Main St" } })
+                    @Html.ValidationMessageFor(model => model.ShippingAddress.Address, "", new { @class = "text-danger" })
+                </div>
+            </div>
+
+            <hr class="mb-4">
+
+            <h4 class="mb-3">Payment</h4>
+
+            <div class="row">
+                <div class="col-md-6 mb-3">
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.Payment.FullName, "Name on card")
+                        @Html.EditorFor(model => model.Payment.FullName, new { htmlAttributes = new { @class = "form-control cc-name", placeholder = "JAMES MARTINEZ" } })
+                        <div class="invalid-feedback fontsize-normal"></div>
+                    </div>
+                </div>
+                <div class="col-md-6 mb-3">
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.Payment.CardNumber, "Credit card number")
+                        @Html.EditorFor(model => model.Payment.CardNumber, new { htmlAttributes = new { @class = "form-control cc-number", autocomplete = "cc-number", placeholder = "•••• •••• •••• ••••" } })
+                        <div class="invalid-feedback fontsize-normal"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-3 mb-3">
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.Payment.ExpirationDate, "Expiration")
+                        @Html.EditorFor(model => model.Payment.ExpirationDate, new { htmlAttributes = new { @class = "form-control cc-exp", autocomplete = "cc-exp", placeholder = "•• / ••••" } })
+                        <div class="invalid-feedback fontsize-normal"></div>
+                    </div>
+                </div>
+                <div class="col-md-3 mb-3">
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.Payment.CardVerificationValue, "CVV")
+                        @Html.EditorFor(model => model.Payment.CardVerificationValue, new { htmlAttributes = new { @class = "form-control cc-cvv", autocomplete = "off", placeholder = "•••" } })
+                        <div class="invalid-feedback fontsize-normal"></div>
+                    </div>
+                </div>
+            </div>
+            <input type="hidden" name="Total" value="@ViewBag.Total" />
+            <input type="hidden" name="UserId" value="@User.Identity.GetUserId()" />
+            <hr class="mb-4">
+            <button type="submit" class="btn btn-primary btn-lg btn-block">Continue to checkout</button>
+        }
+    </div>
+</div>
+
+
+<!-- /.row -->
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jquery-payment")
+    @Scripts.Render("~/bundles/jquery-validation-payment")
+    @Scripts.Render("~/bundles/jqueryval")
+}
